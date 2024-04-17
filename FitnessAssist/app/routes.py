@@ -15,7 +15,9 @@ def home():
     """Home page route showing user's profile and planned exercises."""
     profile = Profile.query.filter_by(user_id=current_user.id).first()
     exercise_plans = ExercisePlan.query.filter_by(user_id=current_user.id).all()
-
+    year = datetime.now().year
+    month = datetime.now().month
+    calendar_html = generate_calendar_html(year, month) 
     # Translate exercise plan IDs to descriptive names, if available.
     for plan in exercise_plans:
         descriptive_exercise = Exercise.query.filter_by(id=plan.exercise).first()
@@ -23,6 +25,7 @@ def home():
             plan.exercise = descriptive_exercise.name
         else:
             plan.exercise = "Unknown Exercise"  # Fallback if no matching exercise found
+    
 
     return render_template('home.html', profile=profile, exercise_plans=exercise_plans)
 
@@ -135,3 +138,21 @@ def reset_macros():
     db.session.commit()
     flash('Today\'s intake has been reset.', 'success')
     return redirect(url_for('main.macros'))
+
+
+def generate_calendar_html(year, month):
+    # Generate a basic calendar HTML for the specified year and month
+    # This is a simplified example, you may need to adjust it based on your requirements
+    html = "<table>"
+    html += "<tr><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th><th>Sunday</th></tr>"
+
+    # Logic to generate calendar rows and columns
+    # You need to implement logic to populate each cell with the appropriate date information
+    # Here, we're just creating an empty grid for demonstration purposes
+    for i in range(6):  # 6 weeks
+        html += "<tr>"
+        for j in range(7):  # 7 days (Monday to Sunday)
+            html += "<td></td>"
+        html += "</tr>"
+    html += "</table>"
+    return html
