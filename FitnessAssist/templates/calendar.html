@@ -12,70 +12,98 @@
         th, td {
             border: 1px solid #ddd;
             text-align: center;
-            padding: 50px; /* Increased padding */
-            width: 50%; /* Each day occupies 20% width */
+            padding: 40px;
+            width: 40%; /* Each day occupies approximately 14.28% width */
             position: relative; /* Enable positioning */
-            font-size: 10px; /* Increased font size */
         }
         th {
             background-color: #f2f2f2;
         }
         .day-number {
             position: absolute;
-            top: 8px; /* Adjust top padding */
-            right: 8px; /* Adjust right padding */
+            top: 8px;
+            right: 8px;
         }
     </style>
 </head>
 <body>
-    <h1>April - 2024</h1>
-    <table>
-        <tr>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
-            <th>Sunday</th>
-        </tr>
-        <tr>
-            <td><span class="day-number">1</span></td>
-            <td><span class="day-number">2</span></td>
-            <td><span class="day-number">3</span></td>
-            <td><span class="day-number">4</span></td>
-            <td><span class="day-number">5</span></td>
-            <td><span class="day-number">6</span></td>
-            <td><span class="day-number">7</span></td>
-        </tr>
-        <tr>
-            <td><span class="day-number">8</span></td>
-            <td><span class="day-number">9</span></td>
-            <td><span class="day-number">10</span></td>
-            <td><span class="day-number">11</span></td>
-            <td><span class="day-number">12</span></td>
-            <td><span class="day-number">13</span></td>
-            <td><span class="day-number">14</span></td>
-        </tr>
-        <tr>
-            <td><span class="day-number">15</span></td>
-            <td><span class="day-number">16</span></td>
-            <td><span class="day-number">17</span></td>
-            <td><span class="day-number">18</span></td>
-            <td><span class="day-number">19</span></td>
-            <td><span class="day-number">20</span></td>
-            <td><span class="day-number">21</span></td>
-        </tr>
-        <tr>
-            <td><span class="day-number">22</span></td>
-            <td><span class="day-number">23</span></td>
-            <td><span class="day-number">24</span></td>
-            <td><span class="day-number">25</span></td>
-            <td><span class="day-number">26</span></td>
-            <td><span class="day-number">27</span></td>
-            <td><span class="day-number">28</span></td>
-        </tr>
-        <!-- Add more rows if needed -->
+    <h1 id="current-month">April 2024</h1>
+    <button onclick="prevMonth()">Previous Month</button>
+    <button onclick="nextMonth()">Next Month</button>
+    <table id="calendar">
+        <thead>
+            <tr>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Sun</th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body">
+            <!-- Calendar days will be dynamically populated here -->
+        </tbody>
     </table>
+
+    <script>
+        function populateCalendar(year, month) {
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const calendarBody = document.getElementById('calendar-body');
+            let html = '';
+
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                html += '<tr>';
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < firstDay) {
+                        html += '<td></td>'; // Placeholder for empty cells before the first day
+                    } else if (date > daysInMonth) {
+                        html += '<td></td>'; // Placeholder for empty cells after the last day
+                    } else {
+                        html += `<td><span class="day-number">${date}</span>`;
+                        html += '<div class="exercise-plan-info">';
+                        html += '<p>Exercise: Plan 1</p>';
+                        html += '<p>Duration: 30 mins</p>';
+                        html += '<button onclick="editExercisePlan()">Edit</button>';
+                        html += '<button onclick="deleteExercisePlan()">Delete</button>';
+                        html += '</div></td>'; // Actual day number
+                        date++;
+                    }
+                }
+                html += '</tr>';
+            }
+
+            calendarBody.innerHTML = html;
+            document.getElementById('current-month').innerText = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+        }
+
+        function prevMonth() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            populateCalendar(currentYear, currentMonth - 1);
+        }
+
+        function nextMonth() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            populateCalendar(currentYear, currentMonth + 1);
+        }
+
+        // Initial population of the calendar
+        populateCalendar(new Date().getFullYear(), new Date().getMonth());
+
+        function editExercisePlan() {
+            // Implement edit functionality here
+            console.log('Edit exercise plan clicked');
+        }
+
+        function deleteExercisePlan() {
+            // Implement delete functionality here
+            console.log('Delete exercise plan clicked');
+        }
+    </script>
 </body>
 </html>

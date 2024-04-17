@@ -156,3 +156,31 @@ def generate_calendar_html(year, month):
         html += "</tr>"
     html += "</table>"
     return html
+@main.route('/edit_exercise_plan/<int:plan_id>', methods=['POST'])
+def edit_excercise_plan(plan_id):
+    if request.method == 'POST':
+        # Retrieve updated workout plan data from the form
+        updated_exercise = request.form.get('exercise')
+        updated_duration = request.form.get('duration')
+        updated_date = request.form.get('date')
+
+        # Update the corresponding workout plan in the database
+        exercise_plan = exercise_plan.query.get_or_404(plan_id)
+        exercise_plan.exercise = updated_exercise
+        exercise_plan.duration = updated_duration
+        exercise_plan.date = updated_date
+        db.session.commit()
+
+        flash('Exercise plan updated successfully', 'success')
+        return redirect(url_for('calendar'))
+
+@main.route('/delete_exercise_plan/<int:plan_id>', methods=['POST'])
+def delete_exercise_plan(plan_id):
+    if request.method == 'POST':
+        # Find the workout plan by its ID and delete it from the database
+        exercise_plan = exercise_plan.query.get_or_404(plan_id)
+        db.session.delete(exercise_plan)
+        db.session.commit()
+
+        flash('Exercise plan deleted successfully', 'success')
+        return redirect(url_for('calendar'))
