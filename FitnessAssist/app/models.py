@@ -12,7 +12,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     goal_type = db.Column(db.String(50), nullable=True)
- 
+    challenges_completed_in_row = db.Column(db.Integer, default=0)
+    total_challenges_completed = db.Column(db.Integer, default=0)
+
 class Profile(db.Model):
     """
     User profile information linked to a User.
@@ -93,3 +95,6 @@ class FitnessChallenge(db.Model):
     description = db.Column(db.String(200), nullable=False)
     link = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    completed = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', backref=db.backref('fitness_challenges', lazy=True))
