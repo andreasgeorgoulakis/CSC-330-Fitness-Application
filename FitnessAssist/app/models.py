@@ -86,3 +86,10 @@ class Exercise(db.Model):
     @staticmethod
     def get_exercises_by_goal(goal_type):
         return Exercise.query.filter_by(goal_type=goal_type).all()
+    
+class FitnessChallenge(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(200), nullable=False)
+    link = db.Column(db.String(200), nullable=True)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
